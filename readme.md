@@ -4,7 +4,7 @@
 
 The solution is 'sugar'
 
-'''
+```
 $ python3 unwordle.py
 found 8636 words of proper length
 Round: 1. Best word to try: story (8636 possible words)
@@ -28,4 +28,9 @@ Enter your attempted word: sugar
 Enter your result in the form ##### (1 = Letter in correct position, 0 = Letter not in word, 2 = Letter in wrong position): 11111
 
 Congratulations!
-'''
+```
+
+### Potential Improvements
+
+1. Use a better dictionary -- this one has weird words in it, ex: aahing, which is technically a word, but would never be used
+2. Add common use frequencies to dictionary -- pick the word with the highest frequency score

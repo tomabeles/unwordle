@@ -60,8 +60,6 @@ class Node:
     def remove(self, letter, position=None):
         keys = list(self.children.keys())
         for key in keys:
-            if key == 'shar':
-                print(key, letter, position)
             if position == None:
                 if key[-1] == letter:
                     self.children[key].delete()

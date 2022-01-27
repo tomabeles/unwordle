@@ -90,13 +90,24 @@ class Node:
 
 
 def apply_result(attempt, result, tree):
+    valid_letters = set()
+    for i in range(len(attempt)):
+        if (result[i] == '1'):
+            valid_letters.add(attempt[i])
+
     for i in range(len(attempt)):
         if result[i] == '1':
             # keep only branches with this letter in this position
             tree.isolate(attempt[i], i)
         if result[i] == '0':
-            # remove all branches with this letter starting at root node
-            tree.remove(attempt[i])
+            if attempt[i] in valid_letters:
+                # letter is present elsewhere in the word; remove branches with the letter not in the correct position
+                for j in range(len(attempt)):
+                    if (attempt[j] != attempt[i] or result[j] != '1'):
+                        tree.remove(attempt[i], j)
+            else:
+                # remove all branches with this letter starting at root node
+                tree.remove(attempt[i])
         if result[i] == '2':
             # remove any branch with the letter in this position
             # remove any branches WITHOUT this letter

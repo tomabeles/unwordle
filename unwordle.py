@@ -1,3 +1,5 @@
+import re
+
 class Node:
     def __init__(self, letters, parent=None) -> None:
         self.letters = letters
@@ -103,6 +105,25 @@ def apply_result(attempt, result, tree):
             tree.remove(attempt[i], i)
             tree.check_leaves(attempt[i])
 
+def get_round_inputs(round, root_node, num_letters):
+    best_word = root_node.pick_best_word()
+    print('Round: ' + str(round) + '. Best word to try: ' + best_word + " (" + str(root_node.child_word_count) + " possible words)")
+
+    attempt = input("Enter your attempted word: ").lower()
+    if len(attempt) != num_letters:
+        raise Exception("Your attempts should all be " + str(num_letters) + " letters long.")
+
+    if not re.match(r"[A-Za-z]+", attempt):
+        raise Exception("Your attempts should only contain letters.")
+
+    result = input("Enter your result in the form ##### (1 = Letter in correct position, 0 = Letter not in word, 2 = Letter in wrong position): ")
+    if len(result) != num_letters:
+        raise Exception("Your result should be " + str(num_letters) + " characters long.")
+    if not set(result).issubset(set(['1', '2', '0'])):
+        raise Exception("Your result should only be formed with the characters (0, 1, 2).")
+
+    print("")
+    return (attempt, result)
 
 def main(num_letters=5, num_rounds=6):
     word_list = []
@@ -121,31 +142,20 @@ def main(num_letters=5, num_rounds=6):
     
     solved = False
     round = 1
-
     while not solved and round <= num_rounds:
-        best_word = root_node.pick_best_word()
-        print('Round: ' + str(round) + '. Best word to try: ' + best_word + " (" + str(root_node.child_word_count) + " possible words)")
-
-        attempt = input("Enter your attempted word: ")
-        if len(attempt) != num_letters:
-            raise Exception("Your attempts should all be " + str(num_letters) + " letters long.")
-
-        result = input("Enter your result in the form ##### (1 = Letter in correct position, 0 = Letter not in word, 2 = Letter in wrong position): ")
-        if len(result) != num_letters:
-            raise Exception("Your result should be " + str(num_letters) + " characters long.")
-        if not set(result).issubset(set(['1', '2', '0'])):
-            raise Exception("Your result should only be formed with the characters (0, 1, 2).")
-
-        print("")
-
-        if result == '11111':
-            print('Congratulations!')
-            solved = True
+        try:
+            (attempt, result) = get_round_inputs(round, root_node, num_letters)
+        except Exception as e:
+            print(e)
         else:
-            try:
-                apply_result(attempt, result, root_node)
-                round += 1
-            except AttributeError:
-                print('All words eliminated -- could not solve')
-            
+            if result == '11111':
+                print('Congratulations!')
+                solved = True
+            else:
+                try:
+                    apply_result(attempt, result, root_node)
+                    round += 1
+                except AttributeError:
+                    print('All words eliminated -- could not solve')
+                    break
 main()

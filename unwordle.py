@@ -106,7 +106,7 @@ def apply_result(attempt, result, tree):
 
 def main(num_letters=5, num_rounds=6):
     word_list = []
-    dictionary_file = open('dictionary.txt', 'r')
+    dictionary_file = open('wordle_dictionary.txt', 'r')
     for line in dictionary_file:
         word = line.strip()
         if len(word) == num_letters:
